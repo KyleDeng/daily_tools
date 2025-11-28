@@ -1,0 +1,131 @@
+.hourly-forecast {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.hourly-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+}
+
+.hourly-chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.legend-line {
+  width: 30px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.legend-line.temp-line {
+  background: linear-gradient(to right, #e74c3c, #f39c12);
+}
+
+.legend-line.rain-line {
+  background: #3498db;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #3498db,
+    #3498db 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+
+/* Combined Chart */
+.chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 12px;
+  background: white;
+  padding: 0.5rem;
+}
+
+.combined-chart {
+  display: block;
+  height: auto;
+  min-height: 280px;
+  background: white;
+}
+
+/* Scrollbar styling */
+.chart-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.chart-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 4px;
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #5568d3;
+}
+
+/* Firefox scrollbar */
+.chart-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #667eea #f1f1f1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hourly-forecast {
+    padding: 1.5rem;
+  }
+
+  .hourly-title {
+    font-size: 1.25rem;
+  }
+
+  .chart-legend {
+    gap: 1rem;
+    font-size: 0.75rem;
+  }
+
+  .legend-line {
+    width: 20px;
+    height: 2px;
+  }
+
+  .combined-chart {
+    min-height: 220px;
+  }
+
+  .chart-wrapper::-webkit-scrollbar {
+    height: 6px;
+  }
+}
+
