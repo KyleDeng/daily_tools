@@ -4,11 +4,13 @@ import Calculator from './Calculator'
 import StringTools from './StringTools'
 import JsonValidator from './JsonValidator'
 import RegexTester from './RegexTester'
+import ShellTranslate from './ShellTranslate'
 
 const Coding = () => {
-  const [activeSubTab, setActiveSubTab] = useState('calculator')
+  const [activeSubTab, setActiveSubTab] = useState('shell')
 
   const subTabs = [
+    { id: 'shell', label: '命令翻译', icon: '🔧' },
     { id: 'calculator', label: '计算器', icon: '🔢' },
     { id: 'string', label: '字符串处理', icon: '📝' },
     { id: 'json', label: 'JSON校验', icon: '{ }' },
@@ -25,6 +27,8 @@ const Coding = () => {
         return <JsonValidator />
       case 'regex':
         return <RegexTester />
+      case 'shell':
+        return <ShellTranslate />
       default:
         return <Calculator />
     }

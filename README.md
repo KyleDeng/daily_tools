@@ -6,7 +6,7 @@
 [![Vite](https://img.shields.io/badge/Vite-6.0.1-646CFF.svg)](https://vitejs.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**工具数量**: 4个主工具 + 4个开发子工具 = 8个实用工具
+**工具数量**: 4个主工具 + 5个开发子工具 = 9个实用工具
 
 ## ✨ 功能特性
 
@@ -39,7 +39,7 @@
 - **行号显示**：便于定位错误位置
 - **一键复制**：复制格式化结果
 
-#### 🔍 正则测试（新增）
+#### 🔍 正则测试
 - **正则编辑器**：支持5种标志（g/i/m/s/u）
 - **实时匹配**：输入即测试，立即显示结果
 - **高亮显示**：黄色背景标记所有匹配项
@@ -47,6 +47,20 @@
 - **10个示例**：邮箱、手机、URL、身份证、日期、IP等
 - **替换功能**：支持捕获组引用（$1, $2...）
 - **一键复制**：快速复制替换结果
+- **行号显示**：便于定位匹配位置
+
+#### 🤖 命令翻译（AI驱动）
+- **自然语言→Shell**：将日常描述转为可执行命令
+  - 例如："列出所有文件" → `ls -la`
+  - 例如："删除所有.log文件" → `find . -name "*.log" -delete`
+- **Linux→PowerShell**：跨平台命令转换
+  - 例如：`ls -la` → `Get-ChildItem -Force`
+  - 例如：`cat file.txt` → `Get-Content file.txt`
+- **AI流式响应**：实时显示翻译过程
+- **聊天式界面**：支持多轮对话，优化命令
+- **Markdown渲染**：代码块高亮显示
+- **环境变量配置**：安全管理API密钥
+- **Coze API集成**：纯前端实现，无需后端
 
 ### 🌦️ 天气工具
 
@@ -89,6 +103,25 @@
 npm install
 ```
 
+### 环境变量配置
+
+命令翻译功能需要配置 Coze API。复制 `.env.example` 并创建 `.env.local` 文件：
+
+```bash
+cp .env.example .env.local
+```
+
+编辑 `.env.local`，填入你的配置：
+
+```env
+VITE_COZE_API_TOKEN=your_api_token_here
+VITE_COZE_BOT_ID=your_bot_id_here
+VITE_COZE_USER_ID=your_user_id_here
+VITE_COZE_BASE_URL=https://api.coze.cn
+```
+
+> **注意**：`.env.local` 已在 `.gitignore` 中，不会提交到Git仓库。
+
 ### 开发模式
 
 ```bash
@@ -124,6 +157,7 @@ npm run lint
 | React | 18.3.1 | UI框架 |
 | Vite | 6.0.1 | 构建工具 |
 | lunar-javascript | 1.7.2 | 农历和黄历库 |
+| @coze/api | 0.1.0-beta.9 | AI对话SDK |
 | ESLint | 9.15.0 | 代码规范 |
 | 原生SVG | - | 图表绘制 |
 | Fetch API | - | 数据获取 |
@@ -137,7 +171,7 @@ daily_tools/
 ├── src/
 │   ├── components/
 │   │   ├── Sidebar/        # 侧边栏导航
-│   │   ├── Coding/         # 开发工具（计算器、字符串、JSON、正则）
+│   │   ├── Coding/         # 开发工具（命令翻译、计算器、字符串、JSON、正则）
 │   │   ├── Weather/        # 天气工具
 │   │   ├── Calendar/       # 日历工具（含黄历）
 │   │   └── News/           # 新闻工具
@@ -150,6 +184,8 @@ daily_tools/
 ├── doc/                    # 文档目录
 │   └── 技术栈说明.md       # 技术文档
 ├── public/                 # 静态资源
+├── .env.example            # 环境变量示例
+├── .env.local              # 环境变量配置（本地，不提交Git）
 ├── MILESTONES.md           # 开发里程碑
 ├── README.md               # 项目说明
 ├── package.json
@@ -164,7 +200,8 @@ daily_tools/
 - 支持响应式设计，移动端自适应
 
 ### Coding工具
-- 横向子Tab切换（计算器、字符串处理、JSON校验、正则测试）
+- 横向子Tab切换（命令翻译、计算器、字符串处理、JSON校验、正则测试）
+- 命令翻译：AI聊天界面，自然语言转Shell，Linux转PowerShell
 - 程序员计算器：进制显示与按钮横向并排，智能禁用按键
 - 字符串处理：三栏布局（输入、操作、输出），带行号
 - JSON工具：双栏布局，实时校验，带行号
@@ -230,7 +267,7 @@ chore: 构建/工具链相关
 - [ ] 备忘录
 - [ ] 汇率转换
 - [ ] 颜色选择器
-- [ ] 正则表达式测试器
+- [ ] Markdown编辑器
 
 ## 🤝 贡献指南
 
@@ -260,7 +297,7 @@ chore: 构建/工具链相关
 ---
 
 **开发状态**: ✅ 核心功能完成，持续优化中  
-**工具总数**: 8个实用工具  
+**工具总数**: 9个实用工具（含AI驱动的命令翻译）  
 **最后更新**: 2024-11-30
 
 如有问题或建议，欢迎提Issue！⭐
