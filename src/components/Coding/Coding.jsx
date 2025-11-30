@@ -3,6 +3,7 @@ import './Coding.css'
 import Calculator from './Calculator'
 import StringTools from './StringTools'
 import JsonValidator from './JsonValidator'
+import RegexTester from './RegexTester'
 
 const Coding = () => {
   const [activeSubTab, setActiveSubTab] = useState('calculator')
@@ -10,7 +11,8 @@ const Coding = () => {
   const subTabs = [
     { id: 'calculator', label: '计算器', icon: '🔢' },
     { id: 'string', label: '字符串处理', icon: '📝' },
-    { id: 'json', label: 'JSON校验', icon: '{ }' }
+    { id: 'json', label: 'JSON校验', icon: '{ }' },
+    { id: 'regex', label: '正则测试', icon: '🔍' }
   ]
 
   const renderSubContent = () => {
@@ -21,6 +23,8 @@ const Coding = () => {
         return <StringTools />
       case 'json':
         return <JsonValidator />
+      case 'regex':
+        return <RegexTester />
       default:
         return <Calculator />
     }
