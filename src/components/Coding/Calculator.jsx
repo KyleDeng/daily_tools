@@ -12,12 +12,42 @@ const Calculator = () => {
   const [base, setBase] = useState('DEC') // 'HEX', 'DEC', 'OCT', 'BIN'
   const [decValue, setDecValue] = useState(0)
 
+  const isDigitAllowed = (digit) => {
+    if (mode !== 'programmer') return true
+    
+    switch (base) {
+      case 'BIN':
+        return digit <= 1
+      case 'OCT':
+        return digit <= 7
+      case 'DEC':
+        return digit <= 9
+      case 'HEX':
+        return digit <= 9
+      default:
+        return true
+    }
+  }
+
   const inputDigit = (digit) => {
+    // Check if digit is allowed in current base
+    if (mode === 'programmer' && !isDigitAllowed(digit)) {
+      return
+    }
+
     if (waitingForOperand) {
       setDisplay(String(digit))
       setWaitingForOperand(false)
     } else {
-      setDisplay(display === '0' ? String(digit) : display + digit)
+      const cleanDisplay = display.replace(/\s/g, '')
+      const newDisplay = cleanDisplay === '0' ? String(digit) : cleanDisplay + digit
+      // Apply formatting for programmer mode
+      if (mode === 'programmer') {
+        const num = parseInt(newDisplay, getBaseRadix(base))
+        setDisplay(convertToDecBase(num, base))
+      } else {
+        setDisplay(newDisplay)
+      }
     }
   }
 
@@ -31,14 +61,62 @@ const Calculator = () => {
   }
 
   const clear = () => {
-    setDisplay('0')
+    if (mode === 'programmer') {
+      setDisplay('0')
+    } else {
+      setDisplay('0')
+    }
     setPreviousValue(null)
     setOperation(null)
     setWaitingForOperand(false)
+    setDecValue(0)
   }
 
   const performOperation = (nextOperation) => {
-    const inputValue = parseFloat(display)
+    if (mode === 'programmer') {
+      // In programmer mode, handle bitwise operations
+      if (['AND', 'OR', 'XOR', '<<', '>>'].includes(nextOperation)) {
+        handleBitwiseOperation(nextOperation)
+        return
+      }
+      
+      // Handle equals for bitwise operations
+      if (nextOperation === '=' && operation && ['AND', 'OR', 'XOR', '<<', '>>'].includes(operation)) {
+        const currentValue = parseInt(display.replace(/\s/g, ''), getBaseRadix(base))
+        let result = currentValue
+        
+        if (previousValue !== null) {
+          switch (operation) {
+            case 'AND':
+              result = previousValue & currentValue
+              break
+            case 'OR':
+              result = previousValue | currentValue
+              break
+            case 'XOR':
+              result = previousValue ^ currentValue
+              break
+            case '<<':
+              result = previousValue << currentValue
+              break
+            case '>>':
+              result = previousValue >> currentValue
+              break
+            default:
+              break
+          }
+          const resultStr = convertToDecBase(result, base)
+          setDisplay(resultStr)
+          setDecValue(result)
+          setPreviousValue(null) // Clear after equals
+          setOperation(null)
+          setWaitingForOperand(false)
+        }
+        return
+      }
+    }
+
+    const inputValue = parseFloat(display.replace(/\s/g, ''))
 
     if (previousValue === null) {
       setPreviousValue(inputValue)
@@ -46,12 +124,23 @@ const Calculator = () => {
       const currentValue = previousValue || 0
       const newValue = calculate(currentValue, inputValue, operation)
       
-      setDisplay(String(newValue))
+      if (mode === 'programmer') {
+        const resultStr = convertToDecBase(Math.floor(newValue), base)
+        setDisplay(resultStr)
+        setDecValue(Math.floor(newValue))
+      } else {
+        setDisplay(String(newValue))
+      }
       setPreviousValue(newValue)
     }
 
-    setWaitingForOperand(true)
-    setOperation(nextOperation)
+    if (nextOperation !== '=') {
+      setWaitingForOperand(true)
+      setOperation(nextOperation)
+    } else {
+      setWaitingForOperand(false)
+      setOperation(null)
+    }
   }
 
   const calculate = (prev, current, op) => {
@@ -107,21 +196,45 @@ const Calculator = () => {
 
   // Programmer calculator functions
   const convertToBase = (value, targetBase) => {
-    const num = parseInt(value, getBaseRadix(base))
+    // Remove spaces from value before parsing
+    const cleanValue = String(value).replace(/\s/g, '')
+    const num = parseInt(cleanValue, getBaseRadix(base))
     if (isNaN(num)) return '0'
     
+    // Handle negative numbers as unsigned 64-bit integers for non-DEC bases
+    let displayNum = num
+    if (num < 0 && targetBase !== 'DEC') {
+      // Convert to unsigned 64-bit integer
+      displayNum = (num >>> 0) // 32-bit unsigned
+    }
+    
+    let result
     switch (targetBase) {
       case 'HEX':
-        return num.toString(16).toUpperCase()
+        result = displayNum.toString(16).toUpperCase()
+        return formatWithSpaces(result, 4)
       case 'DEC':
         return num.toString(10)
       case 'OCT':
-        return num.toString(8)
+        result = displayNum.toString(8)
+        return formatWithSpaces(result, 3)
       case 'BIN':
-        return num.toString(2)
+        result = displayNum.toString(2)
+        return formatWithSpaces(result, 4)
       default:
         return num.toString(10)
     }
+  }
+
+  // Format number with spaces for readability
+  const formatWithSpaces = (str, groupSize) => {
+    // Reverse the string, add spaces, then reverse back
+    const reversed = str.split('').reverse().join('')
+    const groups = []
+    for (let i = 0; i < reversed.length; i += groupSize) {
+      groups.push(reversed.slice(i, i + groupSize))
+    }
+    return groups.join(' ').split('').reverse().join('')
   }
 
   const getBaseRadix = (baseType) => {
@@ -135,18 +248,29 @@ const Calculator = () => {
   }
 
   const handleBaseChange = (newBase) => {
-    const currentValue = parseInt(display, getBaseRadix(base))
+    const currentValue = parseInt(display.replace(/\s/g, ''), getBaseRadix(base))
+    const newDisplay = convertToDecBase(currentValue, newBase)
     setBase(newBase)
-    setDisplay(convertToBase(display, newBase))
+    setDisplay(newDisplay)
     setDecValue(currentValue)
   }
 
   const handleBitwiseOperation = (op) => {
-    const currentValue = parseInt(display, getBaseRadix(base))
+    const currentValue = parseInt(display.replace(/\s/g, ''), getBaseRadix(base))
     let result = currentValue
 
-    if (previousValue !== null) {
-      switch (op) {
+    if (op === 'NOT') {
+      // NOT is a unary operation
+      result = ~currentValue
+      const resultStr = convertToDecBase(result, base)
+      setDisplay(resultStr)
+      setPreviousValue(result)
+      setOperation(null)
+      setWaitingForOperand(false)
+      setDecValue(result)
+    } else if (previousValue !== null && operation) {
+      // Execute pending operation
+      switch (operation) {
         case 'AND':
           result = previousValue & currentValue
           break
@@ -156,9 +280,6 @@ const Calculator = () => {
         case 'XOR':
           result = previousValue ^ currentValue
           break
-        case 'NOT':
-          result = ~currentValue
-          break
         case '<<':
           result = previousValue << currentValue
           break
@@ -166,20 +287,48 @@ const Calculator = () => {
           result = previousValue >> currentValue
           break
         default:
+          result = currentValue
           break
       }
-      setDisplay(convertToBase(result.toString(), base))
-      setPreviousValue(null)
-      setOperation(null)
-    } else if (op === 'NOT') {
-      result = ~currentValue
-      setDisplay(convertToBase(result.toString(), base))
+      const resultStr = convertToDecBase(result, base)
+      setDisplay(resultStr)
+      setPreviousValue(result)
+      setOperation(op) // Set new operation
+      setWaitingForOperand(true)
+      setDecValue(result)
     } else {
+      // First operand, set operation
       setPreviousValue(currentValue)
       setOperation(op)
       setWaitingForOperand(true)
+      setDecValue(currentValue)
     }
-    setDecValue(result)
+  }
+
+  // Convert a decimal number to target base
+  const convertToDecBase = (decNum, targetBase) => {
+    // Handle negative numbers as unsigned for non-DEC bases
+    let displayNum = decNum
+    if (decNum < 0 && targetBase !== 'DEC') {
+      displayNum = (decNum >>> 0) // 32-bit unsigned
+    }
+    
+    let result
+    switch (targetBase) {
+      case 'HEX':
+        result = displayNum.toString(16).toUpperCase()
+        return formatWithSpaces(result, 4)
+      case 'DEC':
+        return decNum.toString(10)
+      case 'OCT':
+        result = displayNum.toString(8)
+        return formatWithSpaces(result, 3)
+      case 'BIN':
+        result = displayNum.toString(2)
+        return formatWithSpaces(result, 4)
+      default:
+        return decNum.toString(10)
+    }
   }
 
   const inputHexDigit = (digit) => {
@@ -188,7 +337,10 @@ const Calculator = () => {
       setDisplay(digit)
       setWaitingForOperand(false)
     } else {
-      setDisplay(display === '0' ? digit : display + digit)
+      const cleanDisplay = display.replace(/\s/g, '')
+      const newDisplay = cleanDisplay === '0' ? digit : cleanDisplay + digit
+      const num = parseInt(newDisplay, 16)
+      setDisplay(convertToDecBase(num, 'HEX'))
     }
   }
 
@@ -266,21 +418,57 @@ const Calculator = () => {
           <button className="prog-btn operator" onClick={() => performOperation('×')}>×</button>
           <button className="prog-btn operator" onClick={() => performOperation('-')}>-</button>
           
-          <button className="prog-btn" onClick={() => inputDigit(7)}>7</button>
-          <button className="prog-btn" onClick={() => inputDigit(8)}>8</button>
-          <button className="prog-btn" onClick={() => inputDigit(9)}>9</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(7) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(7)}
+            disabled={!isDigitAllowed(7)}
+          >7</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(8) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(8)}
+            disabled={!isDigitAllowed(8)}
+          >8</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(9) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(9)}
+            disabled={!isDigitAllowed(9)}
+          >9</button>
           <button className="prog-btn operator" onClick={() => performOperation('+')}>+</button>
           
-          <button className="prog-btn" onClick={() => inputDigit(4)}>4</button>
-          <button className="prog-btn" onClick={() => inputDigit(5)}>5</button>
-          <button className="prog-btn" onClick={() => inputDigit(6)}>6</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(4) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(4)}
+            disabled={!isDigitAllowed(4)}
+          >4</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(5) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(5)}
+            disabled={!isDigitAllowed(5)}
+          >5</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(6) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(6)}
+            disabled={!isDigitAllowed(6)}
+          >6</button>
           <button className="prog-btn equals" onClick={() => performOperation('=')} style={{gridRow: 'span 2'}}>
             =
           </button>
           
-          <button className="prog-btn" onClick={() => inputDigit(1)}>1</button>
-          <button className="prog-btn" onClick={() => inputDigit(2)}>2</button>
-          <button className="prog-btn" onClick={() => inputDigit(3)}>3</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(1) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(1)}
+            disabled={!isDigitAllowed(1)}
+          >1</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(2) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(2)}
+            disabled={!isDigitAllowed(2)}
+          >2</button>
+          <button 
+            className={`prog-btn ${!isDigitAllowed(3) ? 'disabled' : ''}`}
+            onClick={() => inputDigit(3)}
+            disabled={!isDigitAllowed(3)}
+          >3</button>
           
           <button className="prog-btn" onClick={() => inputDigit(0)} style={{gridColumn: 'span 2'}}>0</button>
           <button className="prog-btn" onClick={inputDecimal}>.</button>

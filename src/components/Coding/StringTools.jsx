@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './StringTools.css'
 
 const StringTools = () => {
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
+  const inputLineNumbersRef = useRef(null)
+  const outputLineNumbersRef = useRef(null)
 
   const operations = [
     { id: 'uppercase', label: '转大写', icon: '🔠', fn: (str) => str.toUpperCase() },
@@ -68,6 +70,23 @@ const StringTools = () => {
     setOutput('')
   }
 
+  const getLineNumbers = (text) => {
+    const lines = text.split('\n').length
+    return Array.from({ length: lines }, (_, i) => i + 1)
+  }
+
+  const handleInputScroll = (e) => {
+    if (inputLineNumbersRef.current) {
+      inputLineNumbersRef.current.scrollTop = e.target.scrollTop
+    }
+  }
+
+  const handleOutputScroll = (e) => {
+    if (outputLineNumbersRef.current) {
+      outputLineNumbersRef.current.scrollTop = e.target.scrollTop
+    }
+  }
+
   return (
     <div className="string-tools">
       <div className="string-tools-layout">
@@ -76,12 +95,20 @@ const StringTools = () => {
             <h3 className="section-title">输入文本</h3>
             <button onClick={handleClear} className="clear-btn">清空</button>
           </div>
-          <textarea
-            className="string-input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="请输入要处理的文本..."
-          />
+          <div className="textarea-with-lines">
+            <div className="line-numbers" ref={inputLineNumbersRef}>
+              {getLineNumbers(input).map(num => (
+                <div key={num} className="line-number">{num}</div>
+              ))}
+            </div>
+            <textarea
+              className="string-input"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onScroll={handleInputScroll}
+              placeholder="请输入要处理的文本..."
+            />
+          </div>
         </div>
 
         <div className="string-operations">
@@ -104,12 +131,20 @@ const StringTools = () => {
               📋 复制
             </button>
           </div>
-          <textarea
-            className="string-output"
-            value={output}
-            readOnly
-            placeholder="处理结果将显示在这里..."
-          />
+          <div className="textarea-with-lines">
+            <div className="line-numbers" ref={outputLineNumbersRef}>
+              {getLineNumbers(output).map(num => (
+                <div key={num} className="line-number">{num}</div>
+              ))}
+            </div>
+            <textarea
+              className="string-output"
+              value={output}
+              onScroll={handleOutputScroll}
+              readOnly
+              placeholder="处理结果将显示在这里..."
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -117,4 +152,5 @@ const StringTools = () => {
 }
 
 export default StringTools
+
 

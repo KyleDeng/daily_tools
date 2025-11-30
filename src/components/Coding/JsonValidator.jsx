@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './JsonValidator.css'
 
 const JsonValidator = () => {
@@ -6,6 +6,8 @@ const JsonValidator = () => {
   const [formatted, setFormatted] = useState('')
   const [status, setStatus] = useState(null) // 'valid', 'error', null
   const [errorMessage, setErrorMessage] = useState('')
+  const inputLineNumbersRef = useRef(null)
+  const outputLineNumbersRef = useRef(null)
 
   const validateAndFormat = (jsonString) => {
     if (!jsonString.trim()) {
@@ -94,6 +96,23 @@ const JsonValidator = () => {
     validateAndFormat(sample)
   }
 
+  const getLineNumbers = (text) => {
+    const lines = text.split('\n').length
+    return Array.from({ length: lines }, (_, i) => i + 1)
+  }
+
+  const handleInputScroll = (e) => {
+    if (inputLineNumbersRef.current) {
+      inputLineNumbersRef.current.scrollTop = e.target.scrollTop
+    }
+  }
+
+  const handleOutputScroll = (e) => {
+    if (outputLineNumbersRef.current) {
+      outputLineNumbersRef.current.scrollTop = e.target.scrollTop
+    }
+  }
+
   return (
     <div className="json-validator">
       <div className="json-layout">
@@ -115,12 +134,20 @@ const JsonValidator = () => {
               </button>
             </div>
           </div>
-          <textarea
-            className="json-input"
-            value={input}
-            onChange={handleInputChange}
-            placeholder='请输入JSON数据，例如：{"name": "示例", "value": 123}'
-          />
+          <div className="textarea-with-lines">
+            <div className="line-numbers" ref={inputLineNumbersRef}>
+              {getLineNumbers(input).map(num => (
+                <div key={num} className="line-number">{num}</div>
+              ))}
+            </div>
+            <textarea
+              className="json-input"
+              value={input}
+              onChange={handleInputChange}
+              onScroll={handleInputScroll}
+              placeholder='请输入JSON数据，例如：{"name": "示例", "value": 123}'
+            />
+          </div>
         </div>
 
         <div className="json-section">
@@ -138,11 +165,19 @@ const JsonValidator = () => {
           </div>
           
           {status === 'valid' && (
-            <textarea
-              className="json-output valid"
-              value={formatted}
-              readOnly
-            />
+            <div className="textarea-with-lines">
+              <div className="line-numbers" ref={outputLineNumbersRef}>
+                {getLineNumbers(formatted).map(num => (
+                  <div key={num} className="line-number">{num}</div>
+                ))}
+              </div>
+              <textarea
+                className="json-output valid"
+                value={formatted}
+                onScroll={handleOutputScroll}
+                readOnly
+              />
+            </div>
           )}
           
           {status === 'error' && (
@@ -166,4 +201,5 @@ const JsonValidator = () => {
 }
 
 export default JsonValidator
+
 

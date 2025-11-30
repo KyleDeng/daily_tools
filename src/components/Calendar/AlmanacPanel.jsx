@@ -192,3 +192,4 @@ const AlmanacPanel = ({ selectedDate }) => {
 
 export default AlmanacPanel
 
+

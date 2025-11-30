@@ -274,6 +274,21 @@
   cursor: not-allowed;
 }
 
+.prog-btn.disabled,
+.prog-btn:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.prog-btn.disabled:hover,
+.prog-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .prog-btn.operator {
   background: #667eea;
   color: white;
