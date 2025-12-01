@@ -11,8 +11,8 @@ const HourlyForecast = ({ hourlyData }) => {
     const minTemp = Math.min(...temps)
     const tempRange = maxTemp - minTemp || 10
 
-    // SVG dimensions - wider to accommodate all 48 hours with 1-hour intervals
-    const hourWidth = 30 // Width for each hour
+    // SVG dimensions - wider to accommodate all hours with 1-hour intervals
+    const hourWidth = 60 // Width for each hour (increased for better visibility)
     const width = hourWidth * hourlyData.length + 120 // Total width based on data points
     const height = 280
     const padding = { top: 40, right: 60, bottom: 60, left: 60 }
@@ -72,8 +72,8 @@ const HourlyForecast = ({ hourlyData }) => {
     return <div>Loading...</div>
   }
 
-  // Show only every 3rd hour for labels to avoid crowding in scrollable view
-  const showLabelInterval = 3
+  // Show every hour for labels (changed from 3 to 1 for better readability)
+  const showLabelInterval = 1
 
   return (
     <div className="hourly-forecast">
@@ -276,7 +276,7 @@ const HourlyForecast = ({ hourlyData }) => {
             )
           })}
 
-          {/* X-axis time labels - show every 3 hours */}
+          {/* X-axis time labels - show every hour */}
           {hourlyData.map((hour, index) => {
             const showLabel = index % showLabelInterval === 0
             if (!showLabel) return null

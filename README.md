@@ -64,10 +64,12 @@
 
 ### 🌦️ 天气工具
 
+- **真实数据**：集成和风天气 API，提供准确的天气信息
 - **当前天气**：实时温度、天气状况、湿度、风力、降雨概率、温度范围
-- **48小时预报**：逐小时温度曲线图和降雨概率曲线，1小时间隔，支持横向滚动
-- **15天预报**：未来两周天气趋势，包含最高/最低温度、风力、降雨概率
-- **城市切换**：支持手动输入城市名称查询天气
+- **24小时预报**：逐小时温度曲线图和降雨概率曲线，1小时间隔，支持横向滚动
+- **15天预报**：未来两周天气趋势，包含最高/最低温度、风力、降雨
+- **城市搜索**：支持中文城市名搜索
+- **智能降级**：API 调用失败时自动使用模拟数据
 
 ### 📅 日历工具
 
@@ -105,7 +107,7 @@ npm install
 
 ### 环境变量配置
 
-命令翻译功能需要配置 Coze API。复制 `.env.example` 并创建 `.env.local` 文件：
+部分功能需要配置 API Key。复制 `.env.example` 并创建 `.env.local` 文件：
 
 ```bash
 cp .env.example .env.local
@@ -114,13 +116,22 @@ cp .env.example .env.local
 编辑 `.env.local`，填入你的配置：
 
 ```env
+# 命令翻译工具（Coze API）
 VITE_COZE_API_TOKEN=your_api_token_here
 VITE_COZE_BOT_ID=your_bot_id_here
 VITE_COZE_USER_ID=your_user_id_here
 VITE_COZE_BASE_URL=https://api.coze.cn
+
+# 天气工具（和风天气 API）
+VITE_QWEATHER_API_KEY=your_qweather_api_key_here
 ```
 
 > **注意**：`.env.local` 已在 `.gitignore` 中，不会提交到Git仓库。
+
+#### 获取 API Key
+
+- **和风天气**：[注册地址](https://dev.qweather.com/) | [配置指南](./doc/和风天气API配置指南.md)
+- **Coze AI**：[注册地址](https://www.coze.cn/)
 
 ### 开发模式
 
@@ -158,6 +169,7 @@ npm run lint
 | Vite | 6.0.1 | 构建工具 |
 | lunar-javascript | 1.7.2 | 农历和黄历库 |
 | @coze/api | 0.1.0-beta.9 | AI对话SDK |
+| QWeather API | v7 | 和风天气API |
 | ESLint | 9.15.0 | 代码规范 |
 | 原生SVG | - | 图表绘制 |
 | Fetch API | - | 数据获取 |
@@ -256,9 +268,10 @@ chore: 构建/工具链相关
 ## 📝 待办事项
 
 ### 功能增强
-- [ ] 天气：接入真实天气API
+- [x] 天气：接入真实天气API（和风天气）✅
 - [ ] 天气：实现位置自动获取功能
 - [ ] 天气：添加城市搜索建议
+- [ ] 天气：缓存数据减少API调用
 - [ ] 用户偏好设置持久化
 - [ ] 主题切换（明暗模式）
 
