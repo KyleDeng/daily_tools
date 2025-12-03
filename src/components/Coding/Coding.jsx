@@ -5,6 +5,7 @@ import StringTools from './StringTools'
 import JsonValidator from './JsonValidator'
 import RegexTester from './RegexTester'
 import ShellTranslate from './ShellTranslate'
+import IpLookup from './IpLookup'
 
 const Coding = () => {
   const [activeSubTab, setActiveSubTab] = useState('shell')
@@ -14,7 +15,8 @@ const Coding = () => {
     { id: 'calculator', label: '计算器', icon: '🔢' },
     { id: 'string', label: '字符串处理', icon: '📝' },
     { id: 'json', label: 'JSON校验', icon: '{ }' },
-    { id: 'regex', label: '正则测试', icon: '🔍' }
+    { id: 'regex', label: '正则测试', icon: '🔍' },
+    { id: 'ip', label: 'IP查询', icon: '🌐' }
   ]
 
   const renderSubContent = () => {
@@ -29,6 +31,8 @@ const Coding = () => {
         return <RegexTester />
       case 'shell':
         return <ShellTranslate />
+      case 'ip':
+        return <IpLookup />
       default:
         return <Calculator />
     }

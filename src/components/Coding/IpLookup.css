@@ -1,0 +1,413 @@
+.ip-lookup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ip-lookup-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.ip-lookup-header .title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.ip-lookup-header .subtitle {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.ip-lookup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Input section */
+.ip-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ip-form {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ip-input {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.ip-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.ip-input:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.ip-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ip-btn {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ip-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ip-btn.query {
+  background: #667eea;
+  color: white;
+}
+
+.ip-btn.query:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.ip-btn.my-ip {
+  background: #10b981;
+  color: white;
+}
+
+.ip-btn.my-ip:hover:not(:disabled) {
+  background: #059669;
+}
+
+.ip-btn.clear {
+  background: #e5e7eb;
+  color: #666;
+}
+
+.ip-btn.clear:hover:not(:disabled) {
+  background: #d1d5db;
+}
+
+.my-ip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: fit-content;
+}
+
+/* Error message */
+.ip-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  color: #dc2626;
+}
+
+.error-icon {
+  font-size: 1.25rem;
+}
+
+/* Loading state */
+.ip-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Result section */
+.ip-result {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.country-flag {
+  font-size: 2.5rem;
+}
+
+.result-ip {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.result-item.full-width {
+  grid-column: span 2;
+}
+
+.result-item .label {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.result-item .value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  word-break: break-all;
+}
+
+.map-link {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.view-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: #f0fdf4;
+  color: #15803d;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.view-map-btn:hover {
+  background: #dcfce7;
+}
+
+/* Examples */
+.ip-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.examples-title {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.examples-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.example-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.85rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.example-btn:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ip-form {
+    flex-direction: column;
+  }
+
+  .ip-actions {
+    flex-direction: column;
+  }
+
+  .ip-btn {
+    justify-content: center;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-item.full-width {
+    grid-column: span 1;
+  }
+
+  .examples-list {
+    flex-direction: column;
+  }
+
+  .example-btn {
+    text-align: center;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .ip-lookup-header .title {
+    color: #f3f4f6;
+  }
+
+  .ip-lookup-header .subtitle {
+    color: #9ca3af;
+  }
+
+  .ip-input {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f3f4f6;
+  }
+
+  .ip-input:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+  }
+
+  .ip-btn.clear {
+    background: #4b5563;
+    color: #d1d5db;
+  }
+
+  .ip-btn.clear:hover:not(:disabled) {
+    background: #6b7280;
+  }
+
+  .my-ip-badge {
+    background: #1e3a5f;
+    color: #7dd3fc;
+  }
+
+  .ip-result {
+    background: #1f2937;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .result-ip {
+    color: #f3f4f6;
+  }
+
+  .result-item {
+    background: #374151;
+  }
+
+  .result-item .label {
+    color: #9ca3af;
+  }
+
+  .result-item .value {
+    color: #f3f4f6;
+  }
+
+  .ip-examples {
+    background: #374151;
+  }
+
+  .examples-title {
+    color: #9ca3af;
+  }
+
+  .example-btn {
+    background: #1f2937;
+    border-color: #4b5563;
+    color: #d1d5db;
+  }
+
+  .example-btn:hover {
+    background: #667eea;
+    color: white;
+  }
+
+  .view-map-btn {
+    background: #064e3b;
+    color: #6ee7b7;
+  }
+
+  .view-map-btn:hover {
+    background: #065f46;
+  }
+
+  .map-link {
+    border-top-color: #4b5563;
+  }
+
+  .result-header {
+    border-bottom-color: #4b5563;
+  }
+}
+
