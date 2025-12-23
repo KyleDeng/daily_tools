@@ -203,7 +203,11 @@ export const getCalendarData = (year, month) => {
   const lastDay = new Date(year, month + 1, 0)
   const prevLastDay = new Date(year, month, 0)
   
-  const firstDayOfWeek = firstDay.getDay()
+  // Convert JavaScript day (0=Sunday, 1=Monday...) to Monday-first week (0=Monday, 1=Tuesday...)
+  // Sunday (0) becomes 6, Monday (1) becomes 0, etc.
+  const jsDayOfWeek = firstDay.getDay()
+  const firstDayOfWeek = jsDayOfWeek === 0 ? 6 : jsDayOfWeek - 1
+  
   const daysInMonth = lastDay.getDate()
   const daysInPrevMonth = prevLastDay.getDate()
   
