@@ -26,7 +26,7 @@ log() {
 # 检查 Docker Compose 是否运行
 is_docker_running() {
     cd "$PROJECT_DIR"
-    if docker-compose ps | grep -q "Up"; then
+    if docker compose ps | grep -q "Up"; then
         return 0
     else
         return 1
@@ -37,7 +37,7 @@ is_docker_running() {
 start_docker() {
     cd "$PROJECT_DIR"
     log "启动 Docker Compose..."
-    docker-compose up -d
+    docker compose up -d
     if [ $? -eq 0 ]; then
         log "Docker Compose 启动成功"
         return 0
@@ -51,7 +51,7 @@ start_docker() {
 stop_docker() {
     cd "$PROJECT_DIR"
     log "停止 Docker Compose..."
-    docker-compose down
+    docker compose down
     if [ $? -eq 0 ]; then
         log "Docker Compose 停止成功"
         return 0
@@ -87,11 +87,11 @@ update_and_restart() {
         
         # 重新构建并启动
         log "重新构建镜像..."
-        docker-compose build --no-cache 2>&1 | tee -a "$LOG_FILE"
+        docker compose build --no-cache 2>&1 | tee -a "$LOG_FILE"
         BUILD_STATUS=$?
         
         log "启动 Docker Compose..."
-        docker-compose up -d 2>&1 | tee -a "$LOG_FILE"
+        docker compose up -d 2>&1 | tee -a "$LOG_FILE"
         
         UPDATE_END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
         
@@ -309,7 +309,7 @@ status() {
     cd "$PROJECT_DIR"
     if is_docker_running; then
         echo -e "${GREEN}运行中${NC}"
-        docker-compose ps
+        docker compose ps
     else
         echo -e "${YELLOW}未运行${NC}"
     fi
